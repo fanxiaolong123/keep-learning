@@ -1,0 +1,37 @@
+{
+  "name": "meta-learn",
+  "version": "0.1.0",
+  "description": "A structured learning coach for building reliable knowledge maps, deep understanding, practical judgment, and transfer.",
+  "author": {
+    "name": "Fan",
+    "url": "https://github.com/fanxiaolong123"
+  },
+  "homepage": "https://github.com/fanxiaolong123/keep-learning#readme",
+  "repository": "https://github.com/fanxiaolong123/keep-learning",
+  "license": "MIT",
+  "keywords": [
+    "learning",
+    "education",
+    "knowledge-map",
+    "socratic-dialogue",
+    "metacognition"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "MetaLearn",
+    "shortDescription": "Learn any topic through an adaptive four-stage coaching system.",
+    "longDescription": "MetaLearn diagnoses your starting point, builds and verifies a personalized knowledge map, teaches through Socratic dialogue and active retrieval, and tests whether you can apply and transfer what you learned.",
+    "developerName": "Fan",
+    "category": "Education",
+    "capabilities": [
+      "Interactive",
+      "Research",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Help me systematically learn a new topic.",
+      "Use step2 to build a personalized learning map for me.",
+      "Use step3 to continue from my latest learning-state snapshot."
+    ]
+  }
+}

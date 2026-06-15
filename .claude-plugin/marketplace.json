@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "keep-learning",
+  "owner": {
+    "name": "Fan"
+  },
+  "metadata": {
+    "description": "Structured learning plugins for deliberate, durable mastery."
+  },
+  "plugins": [
+    {
+      "name": "meta-learn",
+      "source": "./plugins/meta-learn",
+      "description": "Learn any topic through positioning, knowledge mapping, deep understanding, and integration.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Fan"
+      },
+      "homepage": "https://github.com/fanxiaolong123/keep-learning#readme",
+      "repository": "https://github.com/fanxiaolong123/keep-learning",
+      "license": "MIT",
+      "category": "Education",
+      "keywords": [
+        "learning",
+        "knowledge-map",
+        "metacognition"
+      ]
+    }
+  ]
+}

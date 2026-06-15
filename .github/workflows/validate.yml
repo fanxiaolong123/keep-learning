@@ -1,0 +1,21 @@
+name: Validate plugins
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Claude Code validator
+        run: npm install --global @anthropic-ai/claude-code
+      - name: Validate manifests and plugin
+        run: bash scripts/validate.sh
