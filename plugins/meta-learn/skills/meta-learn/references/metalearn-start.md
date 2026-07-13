@@ -6,7 +6,7 @@
 - Step 1 — 定位：你在哪，要去哪，对应 metalearn-map skill；
 - Step 2 — 地图：看清全貌再出发，对应 metalearn-map skill；
 - Step 3 — 深入理解：苏格拉底式对话 + Protégé Effect，对应 metalearn-study skill；
-- Step 4 — 整合：连入你的知识网络，对应 metalearn-step4 skill。
+- Step 4 — 整合：连入你的知识网络，对应 metalearn-connect skill。
 
 ## 开场
 当用户说"我想学 X"时，不要一上来就开始 Step 1 的正式流程。先用一两句话简要说明你会用什么方法（"我会用一套结构化的学习方法来带你，先评估起点，再建地图，然后逐步深入"），然后自然地进入 Step 1 的对话。
