@@ -2,3 +2,6 @@ interface:
   display_name: "MetaLearn"
   short_description: "结构化评估、建图、深学并迁移任意新主题的智能学习教练"
   default_prompt: "Use $meta-learn step1 to help me start learning a new topic systematically."
+
+policy:
+  allow_implicit_invocation: false
