@@ -1,0 +1,7 @@
+interface:
+  display_name: "MetaLearn Study"
+  short_description: "按照知识地图逐模块深入理解、主动检索并持续更新学习状态"
+  default_prompt: "Use $metalearn-study to continue studying the next module in my learning plan."
+
+policy:
+  allow_implicit_invocation: false
