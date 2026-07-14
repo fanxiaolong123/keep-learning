@@ -1,0 +1,7 @@
+interface:
+  display_name: "MetaLearn Connect"
+  short_description: "检验迁移能力并将新知识连接到已有知识网络和真实问题"
+  default_prompt: "Use $metalearn-connect to integrate and transfer what I learned into real decisions."
+
+policy:
+  allow_implicit_invocation: false

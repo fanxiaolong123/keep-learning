@@ -1,0 +1,7 @@
+interface:
+  display_name: "MetaLearn Map"
+  short_description: "定位目标、研究主题并构建可靠且可执行的个性化知识地图"
+  default_prompt: "Use $metalearn-map to define my learning goal and build a personalized knowledge map."
+
+policy:
+  allow_implicit_invocation: false
