@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>知识地图</title>
+<style>
+:root{
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  --bg:oklch(0.984 0.006 210);
+  --surface:oklch(1 0 0);
+  --panel:oklch(0.965 0.008 210);
+  --border:oklch(0.9 0.01 215);
+  --border-strong:oklch(0.82 0.012 215);
+  --ink:oklch(0.25 0.02 240);
+  --ink-2:oklch(0.44 0.02 240);
+  --muted:oklch(0.56 0.017 235);
+  --accent:oklch(0.55 0.12 218);
+  --accent-ink:oklch(0.45 0.12 222);
+  --accent-weak:oklch(0.95 0.032 216);
+  --accent-glow:oklch(0.55 0.12 218/.28);
+  --done:oklch(0.58 0.12 156);
+  --done-ink:oklch(0.47 0.12 156);
+  --done-weak:oklch(0.95 0.038 156);
+  --warn:oklch(0.63 0.14 55);
+  --warn-ink:oklch(0.5 0.13 50);
+  --warn-weak:oklch(0.96 0.045 68);
+  --frontier:oklch(0.55 0.18 300);
+  --live:oklch(0.58 0.19 20);
+  --shadow-sm:0 1px 2px oklch(0.4 0.03 235/.05),0 2px 8px oklch(0.4 0.03 235/.05);
+  --shadow-md:0 10px 34px oklch(0.4 0.03 235/.12);
+  --r:14px;--r-sm:9px;
+}
+:root[data-theme="dark"],
+:root[data-theme="auto"]{}
+@media (prefers-color-scheme:dark){:root[data-theme="auto"]{
+  --bg:oklch(0.2 0.02 240);--surface:oklch(0.245 0.02 240);--panel:oklch(0.225 0.02 240);
+  --border:oklch(0.33 0.02 240);--border-strong:oklch(0.42 0.022 240);
+  --ink:oklch(0.94 0.01 235);--ink-2:oklch(0.77 0.016 235);--muted:oklch(0.63 0.016 235);
+  --accent:oklch(0.75 0.11 216);--accent-ink:oklch(0.82 0.1 216);--accent-weak:oklch(0.31 0.06 216);--accent-glow:oklch(0.75 0.11 216/.3);
+  --done:oklch(0.74 0.13 156);--done-ink:oklch(0.82 0.11 156);--done-weak:oklch(0.31 0.05 156);
+  --warn:oklch(0.8 0.12 70);--warn-ink:oklch(0.86 0.1 74);--warn-weak:oklch(0.33 0.05 58);
+  --frontier:oklch(0.76 0.13 302);--live:oklch(0.75 0.15 22);
+  --shadow-sm:0 1px 2px oklch(0 0 0/.25),0 2px 10px oklch(0 0 0/.3);--shadow-md:0 12px 40px oklch(0 0 0/.5);
+}}
+:root[data-theme="dark"]{
+  --bg:oklch(0.2 0.02 240);--surface:oklch(0.245 0.02 240);--panel:oklch(0.225 0.02 240);
+  --border:oklch(0.33 0.02 240);--border-strong:oklch(0.42 0.022 240);
+  --ink:oklch(0.94 0.01 235);--ink-2:oklch(0.77 0.016 235);--muted:oklch(0.63 0.016 235);
+  --accent:oklch(0.75 0.11 216);--accent-ink:oklch(0.82 0.1 216);--accent-weak:oklch(0.31 0.06 216);--accent-glow:oklch(0.75 0.11 216/.3);
+  --done:oklch(0.74 0.13 156);--done-ink:oklch(0.82 0.11 156);--done-weak:oklch(0.31 0.05 156);
+  --warn:oklch(0.8 0.12 70);--warn-ink:oklch(0.86 0.1 74);--warn-weak:oklch(0.33 0.05 58);
+  --frontier:oklch(0.76 0.13 302);--live:oklch(0.75 0.15 22);
+  --shadow-sm:0 1px 2px oklch(0 0 0/.25),0 2px 10px oklch(0 0 0/.3);--shadow-md:0 12px 40px oklch(0 0 0/.5);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.72;-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;font-weight:660;letter-spacing:-0.015em;line-height:1.28}
+p{margin:0}
+button{font-family:inherit;color:inherit;cursor:pointer}
+::selection{background:var(--accent-weak)}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:18px;padding:12px clamp(16px,4vw,40px);
+  background:oklch(1 0 0/.78);backdrop-filter:saturate(1.5) blur(12px);border-bottom:1px solid var(--border)}
+:root[data-theme="dark"] .topbar{background:oklch(0.245 0.02 240/.8)}
+@media (prefers-color-scheme:dark){:root[data-theme="auto"] .topbar{background:oklch(0.245 0.02 240/.8)}}
+.tb-brand{display:flex;align-items:center;gap:10px;font-weight:640;font-size:14.5px;min-width:0}
+.tb-brand .mk{width:26px;height:26px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;flex:none;font-size:13px;font-weight:700}
+.tb-brand .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-prog{flex:1;display:flex;align-items:center;gap:12px;max-width:420px;margin:0 auto}
+.tb-prog .track{flex:1;height:7px;border-radius:99px;background:var(--panel);overflow:hidden;box-shadow:inset 0 0 0 1px var(--border)}
+.tb-prog .track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--done),var(--accent));transition:width .5s cubic-bezier(.2,.7,.2,1)}
+.tb-prog .pct{font-variant-numeric:tabular-nums;font-weight:660;font-size:13.5px;color:var(--accent-ink)}
+.tb-nodes{display:flex;gap:7px;flex:none}
+.tb-nodes button{width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:var(--surface);
+  font-size:12px;font-weight:640;color:var(--muted);transition:.15s}
+.tb-nodes button:hover{border-color:var(--accent);color:var(--accent-ink)}
+.tb-nodes button.doing{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tb-nodes button.done{background:var(--done-weak);color:var(--done-ink);border-color:transparent}
+.tb-nodes button.active{outline:2px solid var(--accent);outline-offset:2px}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 100px}
+
+/* hero */
+.hero{padding:clamp(34px,6vw,70px) 0 26px;text-align:center}
+.hero .eyebrow{font-size:12.5px;color:var(--accent-ink);font-weight:600;letter-spacing:.02em;margin-bottom:16px;display:inline-flex;gap:8px;align-items:center}
+.hero .eyebrow::before,.hero .eyebrow::after{content:"";width:26px;height:1px;background:var(--border-strong)}
+.hero h1{font-size:clamp(26px,4.2vw,40px);letter-spacing:-0.025em;max-width:20ch;margin:0 auto;text-wrap:balance}
+.hero .goal{margin:20px auto 0;max-width:64ch;color:var(--ink-2);font-size:16px;line-height:1.75}
+.hero .case{margin-top:18px;display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:99px;
+  background:var(--surface);border:1px solid var(--border);font-size:13px;color:var(--ink-2);box-shadow:var(--shadow-sm)}
+.hero .case .d{width:7px;height:7px;border-radius:50%;background:var(--live)}
+
+.meta-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:26px 40px;max-width:1000px;margin:36px auto 0;padding-top:30px;border-top:1px solid var(--border);text-align:left}
+.meta-col{min-width:0}
+.meta-col h4{margin-top:0}
+.meta-col h4{font-size:12px;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;margin:0 0 12px;font-weight:600;text-align:left}
+.targets{display:grid;gap:8px}
+.targets .tg{display:flex;gap:10px;font-size:13px;color:var(--ink-2);line-height:1.55;text-align:left}
+.targets .n{flex:none;width:19px;height:19px;border-radius:50%;background:var(--accent-weak);color:var(--accent-ink);font-size:11px;font-weight:660;display:grid;place-items:center;margin-top:2px}
+.rels{display:grid;gap:9px}
+.rl{display:flex;gap:10px;align-items:flex-start;text-align:left;font-size:12.5px;color:var(--muted);line-height:1.5}
+.rl .swatch{flex:none;width:10px;height:10px;border-radius:50%;margin-top:5px}
+.rl b{color:var(--ink-2);font-weight:600}
+.rl[data-k="stable"] .swatch{background:var(--ink-2)}
+.rl[data-k="evolving"] .swatch{background:var(--warn)}
+.rl[data-k="frontier"] .swatch{background:var(--frontier)}
+.rl[data-k="live"] .swatch{background:var(--live)}
+.rl[data-k="guideline"] .swatch{background:var(--accent)}
+.rl[data-k="limited"] .swatch{background:var(--warn)}
+.bounds{display:grid;gap:9px}
+.bd{display:flex;gap:11px;font-size:13px;color:var(--muted);line-height:1.55;text-align:left}
+.bd .bx{flex:none;color:var(--border-strong);font-weight:700;margin-top:1px}
+
+.journey-head{text-align:center;margin:44px 0 8px}
+.journey-head h2{font-size:20px;letter-spacing:-0.02em}
+.journey-head p{color:var(--muted);font-size:13px;margin-top:6px}
+
+/* journey spine */
+.journey{position:relative;margin-top:30px}
+.milestone{position:relative;display:grid;grid-template-columns:72px minmax(0,1fr);gap:20px}
+.rail{position:relative;display:flex;justify-content:center}
+.rail::before{content:"";position:absolute;top:0;bottom:-0px;width:2px;background:var(--border)}
+.milestone:first-child .rail::before{top:34px}
+.milestone.seg-done .rail::before{background:linear-gradient(var(--done),var(--done))}
+.node{position:relative;z-index:2;width:52px;height:52px;border-radius:50%;background:var(--surface);border:2px solid var(--border-strong);
+  display:grid;place-items:center;font-size:19px;font-weight:700;color:var(--muted);margin-top:8px;letter-spacing:-0.02em;transition:.25s;flex:none}
+.milestone[data-state="doing"] .node{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 0 6px var(--accent-glow)}
+.milestone[data-state="done"] .node{background:var(--done);border-color:var(--done);color:#fff}
+.node .pulse{position:absolute;inset:-2px;border-radius:50%;border:2px solid var(--accent);opacity:0;animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.5);opacity:0}}
+.mcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:22px;box-shadow:var(--shadow-sm);
+  overflow:hidden;scroll-margin-top:80px;transition:box-shadow .2s,border-color .2s}
+.milestone[data-state="doing"] .mcard{border-color:oklch(0.55 0.12 218/.35)}
+.mcard:hover{box-shadow:var(--shadow-md)}
+.mc-head{display:flex;align-items:flex-start;gap:16px;padding:18px 22px;cursor:pointer;user-select:none}
+.mc-htext{flex:1;min-width:0}
+.mc-tags{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;letter-spacing:.02em}
+.pill.todo{background:var(--panel);color:var(--muted)}
+.pill.doing{background:var(--accent-weak);color:var(--accent-ink)}
+.pill.done{background:var(--done-weak);color:var(--done-ink)}
+.mc-stage{font-size:11.5px;color:var(--muted)}
+.mc-title{font-size:17px;letter-spacing:-0.015em}
+.mc-q{margin-top:7px;color:var(--muted);font-size:13px;line-height:1.6}
+.mc-right{display:flex;align-items:center;gap:14px;flex:none}
+.donut{position:relative;width:44px;height:44px}
+.donut svg{transform:rotate(-90deg)}
+.donut .n{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:680;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.chev{color:var(--muted);transition:transform .25s cubic-bezier(.2,.7,.2,1)}
+.mcard.open .chev{transform:rotate(90deg)}
+.mc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s cubic-bezier(.2,.7,.2,1)}
+.mcard.open .mc-body{grid-template-rows:1fr}
+.mc-body>.inner{overflow:hidden;min-height:0}
+.mc-body .pad{padding:2px 22px 24px;border-top:1px solid var(--border)}
+
+.state-seg{display:inline-flex;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:3px;margin:16px 0 4px}
+.state-seg button{border:0;background:none;padding:5px 13px;border-radius:6px;font-size:12px;color:var(--ink-2);transition:.15s}
+.state-seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm);font-weight:560}
+
+.block{margin-top:22px}
+.block-h{display:flex;align-items:center;gap:9px;font-size:11.5px;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;margin-bottom:13px;font-weight:600}
+.block-h .ic{width:15px;height:15px}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:14px 16px;background:var(--panel);border-radius:var(--r-sm)}
+.chain .c{padding:5px 11px;border-radius:7px;background:var(--surface);border:1px solid var(--border);font-size:12.5px;color:var(--ink-2)}
+.chain .ar{color:var(--accent);font-size:12px;font-weight:700}
+
+.concepts{display:grid;gap:1px;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));background:var(--border);
+  border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden}
+.concept{display:flex;gap:12px;padding:12px 14px;background:var(--surface);transition:background .15s}
+.concept:hover{background:var(--panel)}
+.concept.hide{opacity:.32}
+.cbx{flex:none;width:19px;height:19px;margin-top:2px;border-radius:50%;border:1.5px solid var(--border-strong);background:var(--surface);display:grid;place-items:center;cursor:pointer;transition:.15s}
+.cbx svg{opacity:0;transform:scale(.5);transition:.15s;color:#fff}
+.concept.mastered .cbx{background:var(--done);border-color:var(--done)}
+.concept.mastered .cbx svg{opacity:1;transform:scale(1)}
+.c-name{font-size:13.5px;font-weight:580}
+.c-name mark{background:var(--warn-weak);color:var(--warn-ink);border-radius:3px;padding:0 2px}
+.concept.mastered .c-name{color:var(--muted)}
+.c-ess{color:var(--muted);font-size:12.5px;line-height:1.55;margin-top:3px}
+
+/* heavy sections (points / sub) */
+.subsecs{display:grid;gap:8px}
+.subsec{border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);overflow:hidden;transition:border-color .15s}
+.subsec.mastered{border-color:oklch(0.58 0.12 156/.4)}
+.ss-head{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;cursor:pointer;user-select:none}
+.ss-head:hover{background:var(--panel)}
+.ss-num{flex:none;width:22px;height:22px;border-radius:6px;background:var(--panel);color:var(--muted);font-size:12px;font-weight:640;display:grid;place-items:center;margin-top:1px}
+.subsec.mastered .ss-num{background:var(--done);color:#fff}
+.ss-main{flex:1;min-width:0}
+.ss-name{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.ss-name mark{background:var(--warn-weak);color:var(--warn-ink);border-radius:3px;padding:0 2px}
+.ss-prev{color:var(--muted);font-size:12.5px;line-height:1.5;margin-top:3px}
+.subsec.open .ss-prev{display:none}
+.ss-chev{flex:none;color:var(--muted);transition:transform .25s;margin-top:3px}
+.subsec.open .ss-chev{transform:rotate(90deg)}
+.ss-check{flex:none;width:20px;height:20px;margin-top:1px;border-radius:50%;border:1.5px solid var(--border-strong);background:var(--surface);display:grid;place-items:center;cursor:pointer;transition:.15s}
+.ss-check svg{opacity:0;transform:scale(.5);transition:.15s;color:#fff}
+.subsec.mastered .ss-check{background:var(--done);border-color:var(--done)}
+.subsec.mastered .ss-check svg{opacity:1;transform:scale(1)}
+.ss-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s cubic-bezier(.2,.7,.2,1)}
+.subsec.open .ss-body{grid-template-rows:1fr}
+.ss-body>.ssin{overflow:hidden;min-height:0}
+.ss-pad{padding:0 14px 14px 47px}
+.cchain{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin:2px 0 12px;padding:10px 12px;background:var(--panel);border-radius:7px}
+.cchain .c{padding:4px 9px;border-radius:6px;background:var(--surface);border:1px solid var(--border);font-size:12px;color:var(--ink-2)}
+.cchain .ar{color:var(--accent);font-size:11px;font-weight:700}
+.points{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.points li{position:relative;padding-left:16px;font-size:13px;color:var(--ink-2);line-height:1.55}
+.points li::before{content:"";position:absolute;left:2px;top:9px;width:5px;height:5px;border-radius:50%;background:var(--border-strong)}
+.subgrp{margin-top:13px}
+.subgrp .sg-name{font-size:12.5px;font-weight:640;color:var(--accent-ink);margin-bottom:7px}
+.ss-essence{margin-top:12px;font-size:13px;line-height:1.6;color:var(--ink);background:var(--accent-weak);border-radius:8px;padding:10px 13px}
+.ss-essence b{color:var(--accent-ink);font-weight:640}
+
+.timeline{display:flex;flex-wrap:wrap;gap:5px;align-items:center;padding:14px 16px;background:var(--panel);border-radius:var(--r-sm)}
+.tl-step{display:inline-flex;align-items:center;gap:8px;padding:5px 11px;border-radius:7px;background:var(--surface);border:1px solid var(--border);font-size:12px;color:var(--ink-2)}
+.tl-step .num{width:17px;height:17px;border-radius:5px;background:var(--panel);display:grid;place-items:center;font-size:10.5px;color:var(--muted);font-weight:600}
+.tl-ar{color:var(--accent)}
+
+.decision{display:flex;gap:13px;padding:16px 18px;border-radius:var(--r);background:var(--accent-weak)}
+.decision .ic{flex:none;width:32px;height:32px;border-radius:9px;background:var(--accent);color:#fff;display:grid;place-items:center}
+.decision .dlabel{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-ink);font-weight:680;margin-bottom:4px}
+.decision p{font-size:14px;color:var(--ink);line-height:1.6;font-weight:500}
+
+.pitfalls{display:grid;gap:8px}
+.pit{display:flex;gap:10px;font-size:13px;color:var(--ink-2);line-height:1.55}
+.pit .x{flex:none;width:18px;height:18px;border-radius:5px;background:var(--warn-weak);color:var(--warn-ink);display:grid;place-items:center;font-size:11px;margin-top:1px}
+
+.tasks{display:grid;gap:4px;grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}
+.task{display:flex;gap:11px;padding:8px 10px;border-radius:var(--r-sm);font-size:13px;color:var(--ink-2);transition:.15s}
+.task:hover{background:var(--panel)}
+.task.done .tl{color:var(--muted);text-decoration:line-through}
+
+/* finish */
+.finish{position:relative;display:grid;grid-template-columns:72px minmax(0,1fr);gap:20px;margin-top:4px}
+.finish .node{background:var(--panel);border-style:dashed}
+.finish-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;box-shadow:var(--shadow-sm);margin-bottom:22px}
+.finish-card h2{font-size:18px;letter-spacing:-0.015em}
+.finish-card .sub{color:var(--muted);font-size:13px;margin-top:5px;margin-bottom:18px}
+.check-grid{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+.ck h3{font-size:13.5px;margin-bottom:3px}
+.ck .csub{color:var(--muted);font-size:11.5px;margin-bottom:12px}
+.check{display:flex;gap:10px;padding:6px;border-radius:7px;font-size:12.5px;color:var(--ink-2);transition:.15s}
+.check:hover{background:var(--panel)}
+.check.done .cl{color:var(--muted);text-decoration:line-through}
+.sources{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:18px}
+.src h3{font-size:12.5px;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+.src h3 .d{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.src ul{margin:0;padding:0;list-style:none;display:grid;gap:7px}
+.src li{font-size:12px;color:var(--ink-2);line-height:1.5;padding-left:14px;position:relative}
+.src li::before{content:"";position:absolute;left:0;top:8px;width:4px;height:4px;border-radius:50%;background:var(--accent)}
+.src a{color:var(--accent-ink);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.src a:hover{border-bottom-color:var(--accent-ink)}
+.fin-sub{font-size:13px;font-weight:640;color:var(--ink);margin:18px 0 12px}
+.pathlist{margin:0 0 4px;padding:0;list-style:none;counter-reset:pp;display:grid;gap:9px}
+.pathlist li{position:relative;padding-left:32px;font-size:13.5px;color:var(--ink-2);line-height:1.6;counter-increment:pp}
+.pathlist li::before{content:counter(pp);position:absolute;left:0;top:0;width:21px;height:21px;border-radius:50%;background:var(--accent-weak);color:var(--accent-ink);font-size:11px;font-weight:700;display:grid;place-items:center}
+.vlist{display:flex;flex-wrap:wrap;gap:7px}
+.vchip{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--done-ink);background:var(--done-weak);border-radius:99px;padding:5px 11px}
+.vchip .vk{display:grid;place-items:center;width:14px;height:14px;border-radius:50%;background:var(--done);color:#fff}
+
+.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:40px}
+
+@media (max-width:720px){
+  .milestone,.finish{grid-template-columns:48px minmax(0,1fr);gap:14px}
+  .node{width:40px;height:40px;font-size:15px}
+  .tb-brand .t{display:none}
+  .tb-nodes{display:none}
+  .check-grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.001ms!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="tb-brand"><span class="mk">M</span><span class="t" id="tbTitle"></span></div>
+  <div class="tb-prog"><span class="track"><i id="tbBar"></i></span><span class="pct" id="tbPct">0%</span></div>
+  <div class="tb-nodes" id="tbNodes"></div>
+</div>
+<div class="wrap"><div id="content"></div></div>
+<noscript><p style="padding:40px">这是一个需要 JavaScript 的交互式学习地图。请在浏览器中打开。</p></noscript>
+<script>
+/* =============================================================================
+ * MetaLearn 知识地图 · 数据区
+ * 生成一份新地图时：用本次计划的数据【整体替换】下面的 window.PLAN 对象。
+ * 除本 <script> 外，其余（样式与渲染脚本）保持不变。文件自包含，双击即可在浏览器打开。
+ *
+ * 字段说明（渲染器字段自适应，标「可选」的没有就省略，不要留空字段）：
+ *   meta.title            必填，地图标题
+ *   meta.caseStudy        可选，标题下的小标签
+ *   goal                  必填，一句话学习目标 / 导语
+ *   start                 可选，起点描述
+ *   targets[]             必填，最终能力要求
+ *   boundaries[]          可选，明确不学的内容
+ *   reliability[]         必填，知识可靠性；{key,name,desc}
+ *                         key 决定圆点颜色：stable / evolving / frontier / live / guideline / limited
+ *   steps[]               可选，四步进度；{name,full,state}，state=done|doing|todo
+ *   conceptLabel          可选，概念区标题（默认「核心概念」；含嵌套子节的计划可用「知识板块」）
+ *   moduleFlow[]          可选，顶部模块导航简称
+ *   modules[]             必填，每个模块：
+ *     index,title         必填；state=todo|doing|done
+ *     coreQuestion        可选，模块核心问题
+ *     chain[]             可选，模块级依赖顺序
+ *     concepts[]          必填，每个知识单元：
+ *       name              必填
+ *       essence           可选，一句话本质
+ *       points[]          可选，要点清单
+ *       chain[]           可选，该单元内部的依赖链
+ *       sub[]             可选，嵌套子部分；{name,points[]}
+ *       （concept 含 points/sub 时自动用可折叠板块，否则用一句话概念网格）
+ *     timeline[]          可选，完整时间链之类的有序步骤
+ *     tasks[]             可选，实战任务
+ *     pitfalls[]          必填，常见误区
+ *     decisionRule        必填，决策能力（当你看到 X，做 Y）
+ *   sources[]             可选，资料索引；{group,items}，items 元素可为字符串或 {name,url}
+ *   completion            可选，{main[],transfer[]}；有则终点区显示完成清单
+ *   path[]                可选，推荐学习路径；无 completion 时终点区显示它
+ *   validation[]          可选，地图验证记录
+ *
+ * 进度维护：教练每完成一个模块，更新对应 module 的 state（及 steps 状态）即可；
+ * 用户在页面上勾选的「已掌握」概念保存在浏览器本地，不写回本文件。
+ * 下面是一份可直接预览的极简示例，生成时整体替换。
+ * ========================================================================== */
+window.PLAN = {
+  conceptLabel: "核心概念",
+  meta: { title: "示例知识地图", caseStudy: "生成时整体替换本 window.PLAN" },
+  goal: "用一句话描述学完能达到的能力（这是模板示例数据，生成新地图时请整体替换）。",
+  targets: ["目标能力一", "目标能力二", "目标能力三"],
+  boundaries: ["明确不学的内容一", "明确不学的内容二"],
+  reliability: [
+    { key: "stable", name: "稳定知识", desc: "标准定义与推导，可给权威来源。" },
+    { key: "evolving", name: "演化知识", desc: "有时效性，使用前查最新来源。" },
+    { key: "frontier", name: "边界知识", desc: "证据尚在发展，标注强度。" },
+  ],
+  steps: [
+    { name: "定位", full: "Step 1 · 定位", state: "done" },
+    { name: "地图", full: "Step 2 · 知识地图", state: "doing" },
+    { name: "深入", full: "Step 3 · 深入", state: "todo" },
+    { name: "整合", full: "Step 4 · 整合", state: "todo" },
+  ],
+  moduleFlow: ["模块一", "模块二"],
+  modules: [
+    {
+      index: 1, title: "扁平概念模块示例", state: "doing",
+      coreQuestion: "这个模块回答的核心问题是什么？",
+      chain: ["前置", "核心", "应用"],
+      concepts: [
+        { name: "概念一", essence: "用最简单的语言给出一句话本质。" },
+        { name: "概念二", essence: "只列关键的，不要面面俱到。" },
+      ],
+      tasks: ["用真实材料做一个实战任务"],
+      pitfalls: ["学习者在这里最容易犯的理解错误"],
+      decisionRule: "当你看到 X 情况，做 Y。",
+    },
+    {
+      index: 2, title: "嵌套子节模块示例", state: "todo",
+      concepts: [
+        { name: "含要点的板块", points: ["要点一", "要点二", "要点三"], essence: "可选的一句话本质。" },
+        { name: "含依赖链的板块", chain: ["起点", "中间", "终点"], points: ["配套要点"] },
+        { name: "含子部分的板块", sub: [
+          { name: "子部分甲", points: ["要点一", "要点二"] },
+          { name: "子部分乙", points: ["要点一"] },
+        ], essence: "子部分之后的整体本质。" },
+      ],
+      pitfalls: ["常见误区一", "常见误区二"],
+      decisionRule: "当你看到 X 情况，做 Y。",
+    },
+  ],
+  sources: [
+    { group: "资料分组", items: ["纯文本资料名", { name: "带链接的资料", url: "https://example.com" }] },
+  ],
+  path: ["推荐路径第一步", "推荐路径第二步", "推荐路径第三步"],
+  validation: ["源材料清查", "多源交叉验证", "覆盖率检查", "用户最终确认"],
+};
+</script>
+<script>
+(function(){
+  const P=window.PLAN, KEY="metalearn:v1:"+P.meta.title;
+  const $=(s,r=document)=>r.querySelector(s);
+  const CN="一二三四五六七八九十";
+  function el(t,p,...k){const e=document.createElement(t);if(p)for(const n in p){
+    if(n==="class")e.className=p[n];else if(n==="html")e.innerHTML=p[n];else if(n.startsWith("on"))e.addEventListener(n.slice(2).toLowerCase(),p[n]);
+    else if(n==="data")for(const d in p.data)e.dataset[d]=p.data[d];else e.setAttribute(n,p[n]);}
+    for(const c of k.flat()){if(c==null||c===false)continue;e.append(c.nodeType?c:document.createTextNode(c));}return e;}
+  const ICON={
+    check:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+    chain:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 17H7A5 5 0 0 1 7 7h2m6 0h2a5 5 0 0 1 0 10h-2M8 12h8"/></svg>',
+    grid:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+    bulb:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2Z"/></svg>',
+    warn:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>',
+    task:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+    clock:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg>',
+    flag:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg>',
+  };
+  const def={concepts:{},tasks:{},completion:{},moduleState:{}};
+  let S;try{S=Object.assign({},def,JSON.parse(localStorage.getItem(KEY)||"{}"));}catch(e){S=Object.assign({},def);}
+  for(const k in def)if(!S[k])S[k]={};
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+  const mState=m=>S.moduleState[m.index]||m.state;
+  function totals(){let tot=0,mas=0;P.modules.forEach(m=>{tot+=m.concepts.length;m.concepts.forEach((c,i)=>{if(S.concepts[`c-${m.index}-${i}`])mas++;});});
+    return {tot,mas,pct:tot?Math.round(mas/tot*100):0,modDone:P.modules.filter(m=>mState(m)==="done").length};}
+  function modProg(m){let d=0;m.concepts.forEach((c,i)=>{if(S.concepts[`c-${m.index}-${i}`])d++;});return {d,t:m.concepts.length};}
+
+  function refreshTop(){
+    const t=totals();$("#tbBar").style.width=t.pct+"%";$("#tbPct").textContent=t.pct+"%";
+    P.modules.forEach(m=>{const b=$(`#tbNodes button[data-jump="${m.index}"]`);if(b)b.className=mState(m);});
+  }
+
+  function buildTop(){
+    $("#tbTitle").textContent=P.meta.title;
+    const n=$("#tbNodes");
+    P.modules.forEach(m=>n.append(el("button",{data:{jump:m.index},title:m.title,onClick:()=>jumpTo(m.index)},String(m.index))));
+  }
+
+  const DR=19,DC=2*Math.PI*DR;
+  function donut(d,t){
+    const pct=t?d/t:0;const wrap=el("div",{class:"donut"});
+    wrap.innerHTML=`<svg width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="${DR}" fill="none" stroke="var(--panel)" stroke-width="4"/>
+      <circle cx="22" cy="22" r="${DR}" fill="none" stroke="var(--done)" stroke-width="4" stroke-linecap="round" stroke-dasharray="${DC}" stroke-dashoffset="${DC*(1-pct)}" style="transition:stroke-dashoffset .5s cubic-bezier(.2,.7,.2,1)"/></svg>
+      <div class="n">${d}/${t}</div>`;
+    return wrap;
+  }
+
+  function buildContent(){
+    const c=$("#content");
+    // hero
+    const hero=el("section",{class:"hero"});
+    hero.append(el("div",{class:"eyebrow"},"MetaLearn · Step 2 知识地图"),
+      el("h1",null,P.meta.title),
+      el("p",{class:"goal"},P.goal),
+      el("div",{class:"case"},el("span",{class:"d"}),P.meta.caseStudy));
+    const mrow=el("div",{class:"meta-row"});
+    const c1=el("div",{class:"meta-col"});c1.append(el("h4",null,"最终能力要求"));
+    const tg=el("div",{class:"targets"});P.targets.forEach((t,i)=>tg.append(el("div",{class:"tg"},el("span",{class:"n"},String(i+1)),t)));
+    c1.append(tg);
+    const c2=el("div",{class:"meta-col"});c2.append(el("h4",null,"知识可靠性"));
+    const rs=el("div",{class:"rels"});P.reliability.forEach(r=>rs.append(el("div",{class:"rl",data:{k:r.key}},el("span",{class:"swatch"}),el("div",null,el("b",null,r.name+"　"),r.desc))));
+    c2.append(rs);
+    mrow.append(c1,c2);
+    if(P.boundaries){
+      const c3=el("div",{class:"meta-col"});c3.append(el("h4",null,"明确不学 · 省时间"));
+      const bd=el("div",{class:"bounds"});P.boundaries.forEach(b=>bd.append(el("div",{class:"bd"},el("span",{class:"bx"},"—"),b)));
+      c3.append(bd);mrow.append(c3);
+    }
+    hero.append(mrow);c.append(hero);
+
+    c.append(el("div",{class:"journey-head"},el("h2",null,P.modules.length+" 个模块，一条主线"),el("p",null,"沿主轴自上而下推进，每个里程碑学完再进入下一个。点开任意里程碑，展开知识板块看要点、决策规则与常见误区。")));
+
+    // journey
+    const j=el("div",{class:"journey"});
+    P.modules.forEach((m,idx)=>j.append(buildMilestone(m,idx)));
+    // finish node
+    const fin=el("div",{class:"finish"});
+    const fnode=el("div",{class:"rail"},el("div",{class:"node",html:ICON.flag}));
+    const fcard=el("div",{class:"finish-card"});
+    if(P.completion){
+      fcard.append(el("h2",null,"终点 · 最终完成标准"),el("p",{class:"sub"},"主案例逐项完成，再迁移到一个结构类似但对象不同的市场。"));
+      const cg=el("div",{class:"check-grid"});
+      cg.append(buildCheck("主案例",P.completion.main.length+" 步完整流程",P.completion.main,"cm"));
+      cg.append(buildCheck("迁移案例",P.completion.transfer.length+" 步独立复现",P.completion.transfer,"ct"));
+      fcard.append(cg);
+    }else{
+      fcard.append(el("h2",null,"终点 · 学习路径与地图质量"),el("p",{class:"sub"},"先按推荐路径依次打通；这张地图本身已通过多轮验证。"));
+      if(P.path){
+        fcard.append(el("div",{class:"fin-sub"},"推荐学习路径"));
+        const ol=el("ol",{class:"pathlist"});P.path.forEach(s=>ol.append(el("li",null,s)));fcard.append(ol);
+      }
+      if(P.validation){
+        fcard.append(el("div",{class:"fin-sub",style:"margin-top:22px"},"地图验证记录 · 全部完成"));
+        const vl=el("div",{class:"vlist"});P.validation.forEach(v=>vl.append(el("span",{class:"vchip"},el("span",{class:"vk",html:ICON.check}),v)));fcard.append(vl);
+      }
+    }
+    // sources inside finish
+    fcard.append(el("div",{class:"fin-sub",style:"margin-top:24px"},"主要原始资料索引"));
+    const sg=el("div",{class:"sources"});
+    P.sources.forEach(g=>{const card=el("div",{class:"src"});card.append(el("h3",null,el("span",{class:"d"}),g.group));
+      const ul=el("ul");g.items.forEach(it=>{const o=(typeof it==="string")?{name:it}:it;
+        ul.append(el("li",null,o.url?el("a",{href:o.url,target:"_blank",rel:"noopener"},o.name):o.name));});
+      card.append(ul);sg.append(card);});
+    fcard.append(sg);
+    fin.append(fnode,fcard);j.append(fin);
+    c.append(j);
+    c.append(el("div",{class:"foot"},"进度自动保存在本地浏览器 · 关闭后再打开仍在　·　MetaLearn 知识地图"));
+  }
+
+  function buildMilestone(m,idx){
+    const st=mState(m);const {d,t}=modProg(m);
+    const ms=el("div",{class:"milestone",data:{index:m.index},id:"mile-"+m.index});
+    ms.dataset.state=st;if(st==="done")ms.classList.add("seg-done");
+    const node=el("div",{class:"node"},st==="done"?el("span",{html:ICON.check.replace(/12/g,"18")}):String(m.index));
+    if(st==="doing")node.append(el("span",{class:"pulse"}));
+    ms.append(el("div",{class:"rail"},node));
+
+    const card=el("div",{class:"mcard",id:"card-"+m.index});
+    const chev=el("div",{class:"chev"});chev.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+    const head=el("div",{class:"mc-head"});
+    head.append(
+      el("div",{class:"mc-htext"},
+        el("div",{class:"mc-tags"},
+          el("span",{class:"pill "+st},st==="done"?"已完成":st==="doing"?"进行中":"未开始"),
+          el("span",{class:"mc-stage"},"里程碑 "+CN[idx]+" / "+P.modules.length)),
+        el("h3",{class:"mc-title"},m.title),
+        m.coreQuestion?el("p",{class:"mc-q"},m.coreQuestion):null),
+      el("div",{class:"mc-right"},donut(d,t),chev)
+    );
+    head.addEventListener("click",()=>card.classList.toggle("open"));
+    card.append(head);
+
+    const body=el("div",{class:"mc-body"});const pad=el("div",{class:"pad"});
+    // state seg
+    const seg=el("div",{class:"state-seg"});
+    [["todo","未开始"],["doing","进行中"],["done","已完成"]].forEach(([v,l])=>{
+      seg.append(el("button",{"aria-pressed":st===v?"true":"false",data:{s:v},onClick:e=>{e.stopPropagation();
+        S.moduleState[m.index]=v;save();ms.dataset.state=v;ms.classList.toggle("seg-done",v==="done");
+        node.innerHTML=v==="done"?ICON.check.replace(/12/g,"18"):String(m.index);
+        if(v==="doing"){const p=document.createElement("span");p.className="pulse";node.append(p);}
+        seg.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.s===v?"true":"false"));
+        const pill=head.querySelector(".pill");pill.className="pill "+v;pill.textContent=v==="done"?"已完成":v==="doing"?"进行中":"未开始";
+        refreshTop();}},l));
+    });
+    pad.append(seg);
+
+    // module-level chain (optional)
+    if(m.chain){
+      const cb=el("div",{class:"block"});cb.append(el("div",{class:"block-h",html:ICON.chain+"<span>依赖顺序</span>"}));
+      const chain=el("div",{class:"chain"});m.chain.forEach((n,i)=>{if(i)chain.append(el("span",{class:"ar"},"→"));chain.append(el("span",{class:"c"},n));});
+      cb.append(chain);pad.append(cb);
+    }
+
+    // concepts / sections (adaptive: heavy → collapsible subsections; light → 2-col grid)
+    const heavy=m.concepts.some(c=>c.points||c.sub);
+    const conB=el("div",{class:"block"});
+    conB.append(el("div",{class:"block-h",html:ICON.grid+`<span>${P.conceptLabel||"核心概念"} · ${m.concepts.length}</span>`}));
+    if(heavy){
+      const list=el("div",{class:"subsecs"});
+      m.concepts.forEach((cc,i)=>list.append(buildSubsec(m,card,cc,i)));
+      conB.append(list);
+    }else{
+      const grid=el("div",{class:"concepts"});
+      m.concepts.forEach((cc,i)=>{
+        const id=`c-${m.index}-${i}`;
+        const row=el("div",{class:"concept"+(S.concepts[id]?" mastered":""),data:{name:cc.name}});
+        const bx=el("button",{class:"cbx",html:ICON.check,"aria-label":"标记已掌握 "+cc.name});
+        row.append(bx,el("div",null,el("div",{class:"c-name"},cc.name),el("div",{class:"c-ess"},cc.essence)));
+        bx.addEventListener("click",()=>{const on=!S.concepts[id];if(on)S.concepts[id]=true;else delete S.concepts[id];save();
+          row.classList.toggle("mastered",on);updateDonut(m,card);refreshTop();});
+        grid.append(row);
+      });
+      conB.append(grid);
+    }
+    pad.append(conB);
+
+    if(m.timeline){
+      const tb=el("div",{class:"block"});tb.append(el("div",{class:"block-h",html:ICON.clock+"<span>完整时间链</span>"}));
+      const tl=el("div",{class:"timeline"});m.timeline.forEach((s,i)=>{if(i)tl.append(el("span",{class:"tl-ar"},"→"));tl.append(el("span",{class:"tl-step"},el("span",{class:"num"},String(i+1)),s));});
+      tb.append(tl);pad.append(tb);
+    }
+
+    const db=el("div",{class:"block"});db.append(el("div",{class:"block-h"},"决策能力"));
+    db.append(el("div",{class:"decision"},el("div",{class:"ic",html:ICON.bulb}),el("div",null,el("div",{class:"dlabel"},"当你看到 → 你就能判断"),el("p",null,m.decisionRule))));
+    pad.append(db);
+
+    const pb=el("div",{class:"block"});pb.append(el("div",{class:"block-h",html:ICON.warn+"<span>常见误区</span>"}));
+    const pl=el("div",{class:"pitfalls"});m.pitfalls.forEach(p=>pl.append(el("div",{class:"pit"},el("span",{class:"x"},"✕"),p)));
+    pb.append(pl);pad.append(pb);
+
+    if(m.tasks){
+      const kb=el("div",{class:"block"});kb.append(el("div",{class:"block-h",html:ICON.task+"<span>实战任务</span>"}));
+      const tk=el("div",{class:"tasks"});
+      m.tasks.forEach((tt,i)=>{const id=`t-${m.index}-${i}`;const row=el("div",{class:"task"+(S.tasks[id]?" done":"")});
+        const bx=el("button",{class:"cbx",html:ICON.check,"aria-label":"完成任务"});if(S.tasks[id])row.classList.add("mastered");
+        row.append(bx,el("span",{class:"tl"},tt));
+        bx.addEventListener("click",()=>{const on=!S.tasks[id];if(on)S.tasks[id]=true;else delete S.tasks[id];save();row.classList.toggle("done",on);row.classList.toggle("mastered",on);});
+        tk.append(row);});
+      kb.append(tk);pad.append(kb);
+    }
+
+    const inner=el("div",{class:"inner"});inner.append(pad);body.append(inner);card.append(body);
+    ms.append(card);return ms;
+  }
+  function updateDonut(m,card){const {d,t}=modProg(m);const fg=card.querySelectorAll(".donut circle")[1];
+    if(fg)fg.style.strokeDashoffset=DC*(1-(t?d/t:0));const n=card.querySelector(".donut .n");if(n)n.textContent=`${d}/${t}`;}
+  function buildSubsec(m,card,cc,i){
+    const id=`c-${m.index}-${i}`;
+    const ss=el("div",{class:"subsec"+(S.concepts[id]?" mastered":""),data:{name:cc.name}});
+    const chev=el("span",{class:"ss-chev"});
+    chev.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+    const check=el("button",{class:"ss-check",html:ICON.check,"aria-label":"标记已掌握 "+cc.name});
+    const prev=cc.points?cc.points.slice(0,2).join("　·　"):(cc.sub?cc.sub.map(s=>s.name).join("　·　"):(cc.essence||""));
+    const head=el("div",{class:"ss-head"},
+      check,
+      el("span",{class:"ss-num"},String(i+1)),
+      el("div",{class:"ss-main"},el("div",{class:"ss-name"},cc.name),prev?el("div",{class:"ss-prev"},prev):null),
+      chev
+    );
+    head.addEventListener("click",e=>{if(e.target.closest(".ss-check"))return;ss.classList.toggle("open");});
+    check.addEventListener("click",e=>{e.stopPropagation();const on=!S.concepts[id];if(on)S.concepts[id]=true;else delete S.concepts[id];save();
+      ss.classList.toggle("mastered",on);updateDonut(m,card);refreshTop();});
+    ss.append(head);
+    const body=el("div",{class:"ss-body"});const pad=el("div",{class:"ss-pad"});
+    if(cc.chain){const ch=el("div",{class:"cchain"});cc.chain.forEach((n,j)=>{if(j)ch.append(el("span",{class:"ar"},"→"));ch.append(el("span",{class:"c"},n));});pad.append(ch);}
+    if(cc.points){const ul=el("ul",{class:"points"});cc.points.forEach(p=>ul.append(el("li",null,p)));pad.append(ul);}
+    if(cc.sub){cc.sub.forEach(sg=>{const g=el("div",{class:"subgrp"});g.append(el("div",{class:"sg-name"},sg.name));
+      const ul=el("ul",{class:"points"});sg.points.forEach(p=>ul.append(el("li",null,p)));g.append(ul);pad.append(g);});}
+    if(cc.essence)pad.append(el("div",{class:"ss-essence"},el("b",null,"一句话本质　"),cc.essence));
+    const inner=el("div",{class:"ssin"});inner.append(pad);body.append(inner);ss.append(body);
+    return ss;
+  }
+  function buildCheck(title,sub,items,prefix){
+    const w=el("div",{class:"ck"});w.append(el("h3",null,title),el("div",{class:"csub"},sub));
+    items.forEach((it,i)=>{const id=`${prefix}-${i}`;const row=el("div",{class:"check"+(S.completion[id]?" done":"")});
+      const bx=el("button",{class:"cbx",html:ICON.check,"aria-label":"完成"});if(S.completion[id])row.classList.add("mastered");
+      row.append(bx,el("span",{class:"cl"},it));
+      bx.addEventListener("click",()=>{const on=!S.completion[id];if(on)S.completion[id]=true;else delete S.completion[id];save();row.classList.toggle("done",on);row.classList.toggle("mastered",on);});
+      w.append(row);});
+    return w;
+  }
+  function jumpTo(i){const card=$("#card-"+i);if(!card)return;card.classList.add("open");
+    card.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"center"});}
+
+  function spy(){
+    const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=e.target.dataset.index;
+      document.querySelectorAll("#tbNodes button").forEach(b=>b.classList.toggle("active",b.dataset.jump===i));}});},{rootMargin:"-15% 0px -75% 0px"});
+    document.querySelectorAll(".milestone").forEach(m=>obs.observe(m));
+  }
+
+  buildTop();buildContent();refreshTop();spy();
+  const doing=P.modules.find(m=>mState(m)==="doing")||P.modules[0];
+  const dc=$("#card-"+doing.index);if(dc)dc.classList.add("open");
+})();
+</script>
+</body>
+</html>
