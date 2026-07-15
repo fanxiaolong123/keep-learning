@@ -131,7 +131,7 @@ description: "Use Fan's four-step learning system to coach a user through positi
 
 - 新学习请求、`map` 或 `step1`：读取 `references/metalearn-map.md`，执行 Step 1。
 - `step2`：读取 `references/metalearn-map.md`，直接执行 Step 2。
-- `step3`：完整读取 `references/metalearn-study.md`；在每个新模块开始前按源文件要求重新读取。
+- `step3`：完整读取 `references/metalearn-study.md`，再按当前学习计划、正式材料和实际进度继续。
 - `step4`：读取 `references/metalearn-connect.md`，执行 Step 4。
 
 用户也可以直接显式调用 `$metalearn-map`、`$metalearn-study` 或 `$metalearn-connect`。接受 `知识地图`、`step 1`、`stage 1`、`第一步` 等等价表达。用户明确指定步骤时，直接进入该步骤，只询问对应源文件真正需要的上下文。

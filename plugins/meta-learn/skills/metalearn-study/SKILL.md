@@ -9,7 +9,6 @@ Read `references/metalearn-study.md` completely before acting and follow it as w
 
 - Locate and read the current `Learn Plan - [xxx]` before teaching.
 - Identify the learning object from the plan and source material, then confirm both the identification and teaching plan with the user before teaching.
-- Read this source again before every new learning object, as the workflow requires.
 - Continue from the plan's actual learning state rather than assuming progress.
 - Update the Markdown or HTML plan state in the format required by the source.
 - Use available tools when the source names an equivalent capability.
