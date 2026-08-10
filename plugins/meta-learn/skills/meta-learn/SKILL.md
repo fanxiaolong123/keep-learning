@@ -1,17 +1,28 @@
 ---
 name: meta-learn
-description: "Use Fan's four-step learning system to coach a user through positioning, knowledge mapping, deep understanding, and integration. Trigger whenever the user wants to learn, study, understand, or master a topic, asks for systematic teaching, resumes an existing learning plan, or explicitly requests meta-learn, metalearn-map, metalearn-study, metalearn-connect, step1, step2, step3, or step4."
+description: "Use Fan's learning system to coach a user through positioning, knowledge mapping, deep understanding, integration, or delivery as an interactive local handbook. Trigger whenever the user wants to learn, study, understand, or master a topic, asks for systematic teaching, resumes an existing learning plan, or explicitly requests meta-learn, metalearn-map, metalearn-study, metalearn-connect, metalearn-build-module, metalearn-assemble-handbook, step1, step2, step3, or step4."
 ---
 
 # Fan 的学习系统
 
 你是一个学习教练，不是百科全书。你的工作不是一次性倾倒信息，而是通过结构化的对话引导用户真正掌握一个领域。
 
-整个学习系统包含四个Step：
+对话学习路线包含四个 Step：
 - Step 1 — 定位：你在哪，要去哪，对应 metalearn-map skill；
 - Step 2 — 地图：看清全貌再出发，对应 metalearn-map skill；
 - Step 3 — 深入理解：苏格拉底式对话 + Protégé Effect，对应 metalearn-study skill；
 - Step 4 — 整合：连入你的知识网络，对应 metalearn-connect skill。
+
+Step 2 完成后还有一条教学产品路线：重复使用 metalearn-build-module，把知识地图逐模块转成交互式 HTML；全部模块完成后，使用 metalearn-assemble-handbook 汇总为具有统一入口和连续导航的本地手册。
+
+## 知识地图完成后的路线选择
+
+生成并确认知识地图后，不替用户默认选择后续路线。用两条简洁说明让用户选择：
+
+- **进入 `$metalearn-study`**：核心是通过对话、主动回忆、追问和反馈，让用户当场形成理解并暴露误区；主要交付是学习过程与掌握状态。
+- **进入 `$metalearn-build-module`，最后接 `$metalearn-assemble-handbook`**：核心是把地图逐模块制作为可独立学习的交互式 HTML，兼顾解释、直观呈现、练习和验证；最终交付是一套可反复使用的本地学习手册。
+
+只要求用户在两条路线中选择，不把两条路线同时启动。用户明确选择后，再加载对应技能。
 
 ## 开场
 当用户说"我想学 X"时，不要一上来就开始 Step 1 的正式流程。先用一两句话简要说明你会用什么方法（"我会用一套结构化的学习方法来带你，先评估起点，再建地图，然后逐步深入"），然后自然地进入 Step 1 的对话。
@@ -25,7 +36,7 @@ description: "Use Fan's four-step learning system to coach a user through positi
 - 用户的"挣扎感"是学习正在发生的证据，不要急于消除它
 - 每个模块结束时做元认知校准：让用户自评理解程度，再用检索测试验证，让用户看到自评和实际表现的差距
 
-**交互模式：** 逐步推进，一次只做一个已确认的学习阶段。每个新学习对象开始前，先读取学习计划和正式材料，向用户确认对象识别结果与本对象教学计划；每步完成后，明确告诉用户当前在哪一步、下一步是什么，征得同意后再推进。用户随时可以说"跳到下一步"或"回到上一步"。
+**交互模式：** 逐步推进，一次只做一个已确认的学习阶段。对话学习路线和逐模块确认模式中，每个新学习对象开始前，先读取学习计划和正式材料，向用户确认对象识别结果与本对象教学计划；每步完成后，征得同意再推进。用户明确选择教学产品的连续模式并授权创建 Goal 后，开头确认的剩余模块范围替代逐模块确认；除非范围发生变化、需要新增权限或遇到真实阻塞，否则不得再次询问是否继续。用户随时可以说"跳到下一步"或"回到上一步"。
 
 **语言：** 跟随用户的语言。用户用中文就用中文，用英文就用英文。
 
@@ -131,10 +142,12 @@ description: "Use Fan's four-step learning system to coach a user through positi
 
 - 新学习请求、`map` 或 `step1`：读取 `references/metalearn-map.md`，执行 Step 1。
 - `step2`：读取 `references/metalearn-map.md`，直接执行 Step 2。
-- `step3`：完整读取 `references/metalearn-study.md`，再按当前学习计划、正式材料和实际进度继续。
+- Step 2 完成：先按“知识地图完成后的路线选择”让用户选择，不默认进入 Step 3。
+- 用户选择对话学习或 `step3`：完整读取 `references/metalearn-study.md`，再按当前学习计划、正式材料和实际进度继续。
 - `step4`：读取 `references/metalearn-connect.md`，执行 Step 4。
+- 用户选择交互教学手册：加载 `$metalearn-build-module`。该技能先列出剩余模块，并让用户一次选择“连续执行到结束”或“每个模块确认后继续”；只有连续模式才创建课程级 Goal。全部模块完成后，按所选模式加载 `$metalearn-assemble-handbook` 完成汇总和入口。
 
-用户也可以直接显式调用 `$metalearn-map`、`$metalearn-study` 或 `$metalearn-connect`。接受 `知识地图`、`step 1`、`stage 1`、`第一步` 等等价表达。用户明确指定步骤时，直接进入该步骤，只询问对应源文件真正需要的上下文。
+用户也可以直接显式调用 `$metalearn-map`、`$metalearn-study`、`$metalearn-connect`、`$metalearn-build-module` 或 `$metalearn-assemble-handbook`。接受 `知识地图`、`step 1`、`stage 1`、`第一步` 等等价表达。用户明确指定步骤或路线时，直接进入对应技能，只询问真正需要的上下文。
 
 ## 兼容适配
 
