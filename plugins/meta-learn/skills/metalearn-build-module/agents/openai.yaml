@@ -1,4 +1,0 @@
-interface:
-  display_name: "MetaLearn · 构建教学模块"
-  short_description: "依据知识地图逐模块确认或用 Goal 连续生成全部交互式教学模块"
-  default_prompt: "使用 $metalearn-build-module 依据指定知识地图，先确认执行方式，再生成交互式教学模块。"

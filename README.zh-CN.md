@@ -19,7 +19,7 @@ claude plugin install meta-learn@keep-learning
 /meta-learn:meta-learn
 ```
 
-入口技能（`meta-learn`、`metalearn-map`、`metalearn-study`、`metalearn-connect`）只在显式调用时运行，聊到想学什么时不会自动触发。
+也可以直接说：`请系统地带我学习分布式系统。`
 
 ## 安装到 Codex
 
