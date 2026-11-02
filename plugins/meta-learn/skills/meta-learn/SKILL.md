@@ -1,6 +1,7 @@
 ---
 name: meta-learn
 description: "Use Fan's learning system to coach a user through positioning, knowledge mapping, deep understanding, integration, or delivery as an interactive local handbook. Trigger whenever the user wants to learn, study, understand, or master a topic, asks for systematic teaching, resumes an existing learning plan, or explicitly requests meta-learn, metalearn-map, metalearn-study, metalearn-connect, metalearn-build-module, metalearn-assemble-handbook, step1, step2, step3, or step4."
+disable-model-invocation: true
 ---
 
 # Fan 的学习系统

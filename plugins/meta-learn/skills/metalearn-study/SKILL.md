@@ -1,6 +1,7 @@
 ---
 name: metalearn-study
 description: "Run MetaLearn Step 3 to teach through the current Learn Plan one plan-defined learning object at a time using Socratic dialogue, active retrieval, Protégé Effect checks, and persistent progress updates. Use when the user explicitly invokes metalearn-study, asks for MetaLearn step3, deep study, or continuation of an existing learning plan."
+disable-model-invocation: true
 ---
 
 # MetaLearn Study

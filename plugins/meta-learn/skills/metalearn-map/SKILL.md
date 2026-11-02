@@ -1,6 +1,7 @@
 ---
 name: metalearn-map
 description: "Run MetaLearn Step 1 and Step 2 to define a learning goal, assess the user's starting point, research the topic, build a verified knowledge map, and create the Learn Plan. Use when the user explicitly invokes metalearn-map, asks for MetaLearn map, step1, step2, positioning, or knowledge mapping."
+disable-model-invocation: true
 ---
 
 # MetaLearn Map
