@@ -6,6 +6,7 @@ All notable changes to Keep Learning are documented here.
 
 ### Changed
 
+- Step 3 模块实践去掉「按知识类型选择实践模式」，只保留案例决策模拟一条路线；版本升至 0.1.7。
 - 插件技能目录整体恢复到拆分前的 7bc6ecd：只保留一个 `meta-learn` 技能，去掉 `metalearn-map`、`metalearn-study`、`metalearn-connect` 独立入口及其重复的参考文件副本，去掉 `metalearn-build-module`、`metalearn-assemble-handbook` 交互手册路线，入口技能恢复可被自动触发。
 - Step 3 回到逐概念教学，模块实践去掉「模式 A — Mini-Project」。
 - 版本升至 0.1.6。
