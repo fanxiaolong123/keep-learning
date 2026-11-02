@@ -1,6 +1,7 @@
 ---
 name: metalearn-connect
 description: "Run MetaLearn Step 4 to test transfer, connect newly learned knowledge to the user's existing knowledge network, resolve conflicts, and apply it to real decisions. Use when the user explicitly invokes metalearn-connect, asks for MetaLearn step4, integration, transfer, or completion of an existing learning plan."
+disable-model-invocation: true
 ---
 
 # MetaLearn Connect

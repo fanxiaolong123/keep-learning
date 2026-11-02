@@ -19,7 +19,7 @@ Start a new Claude Code session, then invoke:
 /meta-learn:meta-learn
 ```
 
-You can also ask naturally: `Help me systematically learn distributed systems.`
+The entry skills (`meta-learn`, `metalearn-map`, `metalearn-study`, `metalearn-connect`) only run when you invoke them explicitly; mentioning that you want to learn something will not start them.
 
 ## Install for Codex
 
